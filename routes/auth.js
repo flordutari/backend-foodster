@@ -10,9 +10,24 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
 
+router.get('/:id', isLoggedIn(), async (req, res, next) => {
+    const { id } = req.params;
+  try {
+    const oneUser = await User.findById(id);
+    if (!oneUser) {
+      res.status(404);
+      res.json({ message: 'Users not found' });
+      return;
+    }
+    res.json(oneUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
-
+  console.log(username,password);
   User.findOne({
       username
     })
@@ -35,51 +50,6 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
     })
     .catch(next);
 });
-
-// router.put('/me', async (req, res, next) => {
-//   const { username, category, imageUrl } = req.body;
-//   if (!username || !category || !imageUrl) {
-//     res.status(400);
-//     res.json({ message: 'Make sure you include all the fields' });
-//   }
-//   const { id } = req.params;
-//   const food = {
-//     name,
-//     category,
-//     imageUrl
-//   };
-//   try {
-//     const editedFood = await Food.findByIdAndUpdate(id, food, { new: true });
-//     res.status(200);
-//     res.json({ message: 'Food updated', data: editedFood });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-// router.put('/me', requireUser, parser.single('image'), async (req, res, next) => {
-//   const { username, description } = req.body;
-//   const { _id } = req.session.currentUser;
-//   const user = {
-//     username,
-//     description
-//   };
-//   if (req.file) {
-//     user.imageUrl = req.file.url;
-//   }
-//   try {
-//     if (!username || !description) {
-//       req.flash('check-edit', 'You need a name and description');
-//       res.redirect('/profile/edit');
-//       return;
-//     }
-//     const updatedUser = await User.findByIdAndUpdate(_id, user, { new: true });
-//     req.session.currentUser = updatedUser;
-//     res.redirect('/profile/' + _id);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password, email } = req.body;
