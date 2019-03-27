@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-const User = require('../models/user');
+const User = require('../models/User');
 
 const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/middlewares');
 
@@ -36,8 +36,53 @@ router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
     .catch(next);
 });
 
+// router.put('/me', async (req, res, next) => {
+//   const { username, category, imageUrl } = req.body;
+//   if (!username || !category || !imageUrl) {
+//     res.status(400);
+//     res.json({ message: 'Make sure you include all the fields' });
+//   }
+//   const { id } = req.params;
+//   const food = {
+//     name,
+//     category,
+//     imageUrl
+//   };
+//   try {
+//     const editedFood = await Food.findByIdAndUpdate(id, food, { new: true });
+//     res.status(200);
+//     res.json({ message: 'Food updated', data: editedFood });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// router.put('/me', requireUser, parser.single('image'), async (req, res, next) => {
+//   const { username, description } = req.body;
+//   const { _id } = req.session.currentUser;
+//   const user = {
+//     username,
+//     description
+//   };
+//   if (req.file) {
+//     user.imageUrl = req.file.url;
+//   }
+//   try {
+//     if (!username || !description) {
+//       req.flash('check-edit', 'You need a name and description');
+//       res.redirect('/profile/edit');
+//       return;
+//     }
+//     const updatedUser = await User.findByIdAndUpdate(_id, user, { new: true });
+//     req.session.currentUser = updatedUser;
+//     res.redirect('/profile/' + _id);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   User.findOne({
       username
@@ -56,6 +101,7 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
       const newUser = new User({
         username,
         password: hashPass,
+        email
       });
 
       return newUser.save().then(() => {
