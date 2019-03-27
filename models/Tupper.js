@@ -20,10 +20,13 @@ const tupperSchema = new Schema({
     enum: ['notAvailable', 'available', 'selled'],
     default: 'notAvailable'
   },
+
   category: {
-    type: String,
-    enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose-free', 'Meat'],
-    required: true
+    type: [{
+      type: String,
+      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose-free', 'Meat'],
+      required: true
+    }]
   },
   value: {
     type: Number,

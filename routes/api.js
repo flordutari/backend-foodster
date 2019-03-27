@@ -38,9 +38,9 @@ router.get('/tuppers/:id', async (req, res, next) => {
 
 router.post('/tuppers', async (req, res, next) => {
   const tupper = req.body;
-  if (!tupper.imageUrl || !tupper.name || !tupper.category) {
+  if (!tupper.name || !tupper.category || !tupper.imageUrl) {
     res.status(400);
-    res.json({ message: 'Make sure you include name, image and category' });
+    res.json({ message: 'Make sure you include name, category and image' });
     return;
   }
   try {

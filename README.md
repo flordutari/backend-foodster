@@ -1,4 +1,4 @@
-# Project Name
+<!-- # Project Name
 
 Foodster
 
@@ -244,4 +244,4 @@ The url to your repository and to your deployed project
 
 The url to your presentation slides
 
-[Slides Link](https://slides.com/florenciadutari/foodster)
+[Slides Link](https://slides.com/florenciadutari/foodster) -->
