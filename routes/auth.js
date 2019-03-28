@@ -27,7 +27,6 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
 
 router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
-  console.log(username,password);
   User.findOne({
       username
     })
@@ -88,7 +87,7 @@ router.post('/logout', isLoggedIn(), (req, res, next) => {
   return res.status(204).send();
 });
 
-router.get('/private', isLoggedIn(), (req, res, next) => {
+router.get('/categories', isLoggedIn(), (req, res, next) => {
   res.status(200).json({
     message: 'This is a private message'
   });

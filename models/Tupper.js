@@ -13,14 +13,14 @@ const tupperSchema = new Schema({
     required: true
   },
   imageUrl: {
-    type: String
+    type: String,
+    default: '../frontend/public/img/logo3.svg'
   },
   status: {
     type: String,
     enum: ['notAvailable', 'available', 'selled'],
-    default: 'notAvailable'
+    default: 'available'
   },
-
   category: {
     type: [{
       type: String,
@@ -29,9 +29,9 @@ const tupperSchema = new Schema({
     }]
   },
   value: {
-    type: Number,
+    type: String,
     enum: ['1', '2', '3', '4', '5'],
-    default: '1'
+    required: true
   }
 }, {
   timestamps: {
