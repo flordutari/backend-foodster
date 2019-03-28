@@ -34,10 +34,6 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'Tupper'
   }],
-  tuppersHistory: [{
-    type: ObjectId,
-    ref: 'Tupper'
-  }],
   location: {
     type: {
       type: String,

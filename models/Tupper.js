@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 const tupperSchema = new Schema({
+  creator: {
+    type: ObjectId,
+    ref: 'User'
+  },
   owner: {
     type: ObjectId,
     ref: 'User'
@@ -14,24 +18,21 @@ const tupperSchema = new Schema({
   },
   imageUrl: {
     type: String,
-    default: '../frontend/public/img/logo3.svg'
+    default: '../img/logo3.svg'
   },
-  status: {
-    type: String,
-    enum: ['notAvailable', 'available', 'selled'],
-    default: 'available'
+  available: {
+    type: Boolean,
+    default: true
   },
   category: {
     type: [{
       type: String,
-      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose-free', 'Meat'],
-      required: true
+      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose-free', 'Meat']
     }]
   },
-  value: {
+  price: {
     type: String,
-    enum: ['1', '2', '3', '4', '5'],
-    required: true
+    enum: ['1', '2', '3', '4', '5']
   }
 }, {
   timestamps: {

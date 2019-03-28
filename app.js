@@ -23,13 +23,13 @@ mongoose.connect(process.env.MONGODB_URI, {
   console.error(error);
 })
 
-
 const app = express();
 
 app.use(cors({
   credentials: true,
   origin: [process.env.PUBLIC_DOMAIN]
 }));
+
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,OPTIONS,DELETE');
@@ -50,6 +50,7 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -3,10 +3,7 @@ const router = express.Router();
 
 const Tupper = require('../models/Tupper');
 
-// const { isLoggedIn, isNotLoggedIn, validationLoggin } = require('../helpers/middlewares');
-
 router.get('/tuppers', async (req, res, next) => {
-  // const { username } = req.query;
   try {
     const allTuppers = await Tupper.find();
     if (!allTuppers.length) {
@@ -22,12 +19,11 @@ router.get('/tuppers', async (req, res, next) => {
 
 router.get('/tuppers/:id', async (req, res, next) => {
   const { id } = req.params;
-  // const { username } = req.query;
   try {
     const oneTupper = await Tupper.findById(id);
     if (!oneTupper) {
       res.status(404);
-      res.json({ message: 'Tuppers not found' });
+      res.json({ message: 'Tupper not found' });
       return;
     }
     res.json(oneTupper);
@@ -37,10 +33,12 @@ router.get('/tuppers/:id', async (req, res, next) => {
 });
 
 router.post('/tuppers', async (req, res, next) => {
-  const tupper = req.body;
-  if (!tupper.name || !tupper.category || !tupper.imageUrl) {
+  const { name, imageUrl, category, price } = req.body;
+  const { _id } = req.session.currentUser;
+  const tupper = { name, imageUrl, category, price, creator:{_id} };
+  if (!tupper.name || !tupper.price || !tupper.category) {
     res.status(400);
-    res.json({ message: 'Make sure you include name, category and image' });
+    res.json({ message: 'Make sure you include name, category and price' });
     return;
   }
   try {
@@ -68,6 +66,22 @@ router.put('/tuppers/:id', async (req, res, next) => {
     const editedTupper = await Tupper.findByIdAndUpdate(id, tupper, { new: true });
     res.status(200);
     res.json({ message: 'Tupper updated', data: editedTupper });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/tuppers/:id/buy', async (req, res, next) => {
+  const { available } = req.body;
+  if (!req.body) {
+    res.status(400);
+    res.json({ message: 'Make sure you change the status' });
+  }
+  const { id } = req.params;
+  try {
+    const editedStatusTupper = await Tupper.findByIdAndUpdate(id, {available: !available});
+    res.status(200);
+    res.json({ message: 'Tupper updated', data: editedStatusTupper });
   } catch (error) {
     next(error);
   }

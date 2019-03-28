@@ -10,21 +10,6 @@ router.get('/me', isLoggedIn(), (req, res, next) => {
   res.json(req.session.currentUser);
 });
 
-router.get('/:id', isLoggedIn(), async (req, res, next) => {
-    const { id } = req.params;
-  try {
-    const oneUser = await User.findById(id);
-    if (!oneUser) {
-      res.status(404);
-      res.json({ message: 'Users not found' });
-      return;
-    }
-    res.json(oneUser);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.post('/login', isNotLoggedIn(), validationLoggin(), (req, res, next) => {
   const { username, password } = req.body;
   User.findOne({
@@ -73,7 +58,8 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         email
       });
 
-      return newUser.save().then(() => {
+      return newUser.save()
+        .then(() => {
         // TODO delete password 
         req.session.currentUser = newUser;
         res.status(200).json(newUser);
@@ -91,6 +77,21 @@ router.get('/categories', isLoggedIn(), (req, res, next) => {
   res.status(200).json({
     message: 'This is a private message'
   });
+});
+
+router.get('/:id', isLoggedIn(), async (req, res, next) => {
+  const { id } = req.params;
+try {
+  const oneUser = await User.findById(id);
+  if (!oneUser) {
+    res.status(404);
+    res.json({ message: 'Users not found' });
+    return;
+  }
+  res.json(oneUser);
+} catch (error) {
+  next(error);
+}
 });
 
 module.exports = router;
