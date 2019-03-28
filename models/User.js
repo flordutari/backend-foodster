@@ -23,8 +23,9 @@ const userSchema = new Schema({
   status: {
     type: Number
   },
-  saldo: {
-    type: Number
+  tickets: {
+    type: Number,
+    default: 3
   },
   following: [{
     type: ObjectId,

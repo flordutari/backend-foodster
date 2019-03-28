@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Tupper = require('../models/Tupper');
+const User = require('../models/User');
 
 router.get('/tuppers', async (req, res, next) => {
   try {
@@ -71,17 +72,19 @@ router.put('/tuppers/:id', async (req, res, next) => {
   }
 });
 
-router.put('/tuppers/:id/buy', async (req, res, next) => {
-  const { available } = req.body;
+router.put('/tuppers/transaction/:id', async (req, res, next) => {
+  const { available, owner, tickets } = req.body;
   if (!req.body) {
     res.status(400);
     res.json({ message: 'Make sure you change the status' });
   }
   const { id } = req.params;
+  const { _id } = req.session.currentUser;
   try {
-    const editedStatusTupper = await Tupper.findByIdAndUpdate(id, {available: !available});
+    const editedBoughtTupper = await Tupper.findByIdAndUpdate(id, { "$set": { available: !available, owner}}, {new: true});
+    const editedUser = await User.findByIdAndUpdate(_id, {tickets}, {new: true});
     res.status(200);
-    res.json({ message: 'Tupper updated', data: editedStatusTupper });
+    res.json({ message: 'Tupper and user updated', data: {editedBoughtTupper, editedUser } });
   } catch (error) {
     next(error);
   }

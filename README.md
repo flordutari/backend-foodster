@@ -112,7 +112,7 @@ email - String // required & unique
 password - String // required
 imageUrl - String
 status - Number
-saldo - Number
+tickets - Number
 following - [ObjectID<User>]
 favorites - [ObjectID<tupper>]
 tupperHistory - [ObjectID<tupper>]

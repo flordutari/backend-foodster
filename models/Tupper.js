@@ -31,8 +31,8 @@ const tupperSchema = new Schema({
     }]
   },
   price: {
-    type: String,
-    enum: ['1', '2', '3', '4', '5']
+    type: Number,
+    enum: [1, 2, 3, 4, 5]
   }
 }, {
   timestamps: {
