@@ -17,8 +17,7 @@ const tupperSchema = new Schema({
     required: true
   },
   imageUrl: {
-    type: String,
-    default: '../img/logo3.svg'
+    type: String
   },
   available: {
     type: Boolean,

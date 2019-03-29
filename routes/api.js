@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+ObjectId = require('mongodb').ObjectID;
 
 const Tupper = require('../models/Tupper');
 const User = require('../models/User');
@@ -72,7 +73,7 @@ router.put('/tuppers/:id', async (req, res, next) => {
   }
 });
 
-router.put('/tuppers/transaction/:id', async (req, res, next) => {
+router.put('/tuppers/:id/buy', async (req, res, next) => {
   const { available, owner, tickets } = req.body;
   if (!req.body) {
     res.status(400);
