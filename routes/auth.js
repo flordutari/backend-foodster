@@ -73,25 +73,18 @@ router.post('/logout', isLoggedIn(), (req, res, next) => {
   return res.status(204).send();
 });
 
-router.get('/categories', isLoggedIn(), (req, res, next) => {
-  res.status(200).json({
-    message: 'This is a private message'
-  });
-});
 
-router.get('/:id', isLoggedIn(), async (req, res, next) => {
-  const { id } = req.params;
-try {
-  const oneUser = await User.findById(id);
-  if (!oneUser) {
-    res.status(404);
-    res.json({ message: 'Users not found' });
-    return;
-  }
-  res.json(oneUser);
-} catch (error) {
-  next(error);
-}
-});
+// router.put('/favorites', isLoggedIn(), async (req, res, next) => {
+//   const { favorite } = req.body;
+//   const { id } = req.params;
+//   try {
+//     const userFavorites = await User.findByIdAndUpdate(id, { "$push": {favorites: favorite} })
+//     req.session.currentUser = buyerUser;
+//     res.status(200);
+//     res.json({ message: 'Tupper and users updated', data: { userFavorites } });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = router;

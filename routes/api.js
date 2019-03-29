@@ -8,11 +8,6 @@ const User = require('../models/User');
 router.get('/tuppers', async (req, res, next) => {
   try {
     const allTuppers = await Tupper.find();
-    if (!allTuppers.length) {
-      res.status(404);
-      res.json({ message: 'Tuppers not found' });
-      return;
-    }
     res.json(allTuppers);
   } catch (error) {
     next(error);
@@ -32,6 +27,12 @@ router.get('/tuppers/:id', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.get('/tuppers/categories', (req, res, next) => {
+  res.status(200).json({
+    message: 'This is a private message'
+  });
 });
 
 router.post('/tuppers', async (req, res, next) => {
@@ -74,7 +75,7 @@ router.put('/tuppers/:id', async (req, res, next) => {
 });
 
 router.put('/tuppers/:id/buy', async (req, res, next) => {
-  const { available, owner, tickets } = req.body;
+  const { available, buyerId, buyerTickets, creatorTickets, creatorId  } = req.body;
   if (!req.body) {
     res.status(400);
     res.json({ message: 'Make sure you change the status' });
@@ -82,10 +83,12 @@ router.put('/tuppers/:id/buy', async (req, res, next) => {
   const { id } = req.params;
   const { _id } = req.session.currentUser;
   try {
-    const editedBoughtTupper = await Tupper.findByIdAndUpdate(id, { "$set": { available: !available, owner}}, {new: true});
-    const editedUser = await User.findByIdAndUpdate(_id, {tickets}, {new: true});
+    const boughtTupper = await Tupper.findByIdAndUpdate(id, { "$set": { available: !available, buyerId}}, {new: true});
+    const buyerUser = await User.findByIdAndUpdate(_id, {tickets: buyerTickets}, {new: true});
+    const creatorUser = await User.findByIdAndUpdate(creatorId, {tickets: creatorTickets}, {new: true});
+    req.session.currentUser = buyerUser;
     res.status(200);
-    res.json({ message: 'Tupper and user updated', data: {editedBoughtTupper, editedUser } });
+    res.json({ message: 'Tupper and users updated', data: {boughtTupper, buyerUser, creatorUser } });
   } catch (error) {
     next(error);
   }
