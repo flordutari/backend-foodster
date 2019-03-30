@@ -54,8 +54,8 @@ router.post('/tuppers', async (req, res, next) => {
 });
 
 router.put('/tuppers/:id', async (req, res, next) => {
-  const { name, category, imageUrl } = req.body;
-  if (!name || !category || !imageUrl) {
+  const { name, category, imageUrl, price } = req.body;
+  if (!name || !category || !imageUrl || !price) {
     res.status(400);
     res.json({ message: 'Make sure you include all the fields' });
   }
@@ -63,7 +63,8 @@ router.put('/tuppers/:id', async (req, res, next) => {
   const tupper = {
     name,
     category,
-    imageUrl
+    imageUrl,
+    price
   };
   try {
     const editedTupper = await Tupper.findByIdAndUpdate(id, tupper, { new: true });

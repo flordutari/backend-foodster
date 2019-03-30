@@ -17,8 +17,7 @@ const tupperSchema = new Schema({
     required: true
   },
   imageUrl: {
-    type: String,
-    default: '../img/default-tupper.svg'
+    type: String
   },
   available: {
     type: Boolean,
@@ -27,7 +26,7 @@ const tupperSchema = new Schema({
   category: {
     type: [{
       type: String,
-      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Lactose-free', 'Meat']
+      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Meat']
     }]
   },
   price: {
