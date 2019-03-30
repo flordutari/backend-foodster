@@ -23,9 +23,9 @@ router.put('/favorite', async (req, res, next) => {
   const { _id } = req.session.currentUser;
   try {
     const userAddFavorite = await User.findByIdAndUpdate(_id, { "$push": {favorites: tupperId}}, {new: true})
+    req.session.currentUser = userAddFavorite;
     res.status(200);
     res.json({ message: 'User updated', data: { userAddFavorite } });
-    req.session.currentUser = userAddFavorite;
   } catch (error) {
     next(error);
   }
@@ -35,7 +35,7 @@ router.put('/undofavorite', async (req, res, next) => {
   const { tupperId } = req.body;
   const { _id } = req.session.currentUser;
   try {
-    const userUndoFavorite = await User.findByIdAndUpdate(_id, { "$pull": {favorites: tupperId} })
+    const userUndoFavorite = await User.findByIdAndUpdate(_id, { "$pull": {favorites: tupperId} }, {new: true})
     req.session.currentUser = userUndoFavorite;
     res.status(200);
     res.json({ message: 'Tupper and users updated', data: { userUndoFavorite } });

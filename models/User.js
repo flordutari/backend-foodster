@@ -17,7 +17,8 @@ const userSchema = new Schema({
     required: true
   },
   imageUrl: {
-    type: String
+    type: String,
+    default: '../img/default-profile.png'
   },
   status: {
     type: Number
