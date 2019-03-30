@@ -31,6 +31,10 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'User'
   }],
+  followers: [{
+    type: ObjectId,
+    ref: 'User'
+  }],
   favorites: [{
     type: ObjectId,
     ref: 'Tupper'
