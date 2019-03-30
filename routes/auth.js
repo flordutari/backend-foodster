@@ -47,23 +47,23 @@ router.post('/signup', isNotLoggedIn(), validationLoggin(), (req, res, next) => 
         err.status = 422;
         err.statusMessage = 'username-not-unique';
         next(err);
+      } else {
+        const salt = bcrypt.genSaltSync(10);
+        const hashPass = bcrypt.hashSync(password, salt);
+  
+        const newUser = new User({
+          username,
+          password: hashPass,
+          email
+        });
+  
+        return newUser.save()
+          .then(() => {
+          // TODO delete password 
+          req.session.currentUser = newUser;
+          res.status(200).json(newUser);
+        });
       }
-
-      const salt = bcrypt.genSaltSync(10);
-      const hashPass = bcrypt.hashSync(password, salt);
-
-      const newUser = new User({
-        username,
-        password: hashPass,
-        email
-      });
-
-      return newUser.save()
-        .then(() => {
-        // TODO delete password 
-        req.session.currentUser = newUser;
-        res.status(200).json(newUser);
-      });
     })
     .catch(next);
 });
@@ -72,19 +72,5 @@ router.post('/logout', isLoggedIn(), (req, res, next) => {
   req.session.destroy();
   return res.status(204).send();
 });
-
-
-// router.put('/favorites', isLoggedIn(), async (req, res, next) => {
-//   const { favorite } = req.body;
-//   const { id } = req.params;
-//   try {
-//     const userFavorites = await User.findByIdAndUpdate(id, { "$push": {favorites: favorite} })
-//     req.session.currentUser = buyerUser;
-//     res.status(200);
-//     res.json({ message: 'Tupper and users updated', data: { userFavorites } });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 module.exports = router;

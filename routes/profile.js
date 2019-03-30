@@ -18,6 +18,23 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.get('/edit', async (req, res, next) => {
+  const { username } = req.body;
+  const { _id } = req.session.currentUser;
+  try {
+    const editedUser = await User.findByIdAndUpdate(_id, { "$set": {username}}, {new: true});
+    req.session.currentUser = editedUser;
+    if (!editedUser) {
+      res.status(404);
+      res.json({ message: 'User not found' });
+      return;
+    }
+    res.json(editedUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.put('/favorite', async (req, res, next) => {
   const { tupperId } = req.body;
   const { _id } = req.session.currentUser;
