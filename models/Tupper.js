@@ -26,7 +26,7 @@ const tupperSchema = new Schema({
   category: {
     type: [{
       type: String,
-      enum: ['All', 'Vegetarian', 'Vegan', 'Gluten-free', 'Meat']
+      enum: ['all', 'vegetarian', 'vegan', 'meat', 'pasta', 'gluten-free']
     }]
   },
   price: {

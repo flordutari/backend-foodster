@@ -3,7 +3,18 @@ const router = express.Router();
 
 const User = require('../models/User');
 
-router.get('/:id', async (req, res, next) => {
+const { isLoggedIn } = require('../helpers/middlewares');
+
+router.get('/users', isLoggedIn(), async (req, res, next) => {
+  try {
+    const allUsers = await User.find();
+    res.json(allUsers);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;
   try {
     const oneUser = await User.findById(id);
@@ -18,7 +29,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.put('/edit', async (req, res, next) => {
+router.put('/edit', isLoggedIn(), async (req, res, next) => {
   const { username, imageUrl, email } = req.body;
   const { _id } = req.session.currentUser;
   try {
@@ -31,7 +42,7 @@ router.put('/edit', async (req, res, next) => {
   }
 });
 
-router.put('/favorite', async (req, res, next) => {
+router.put('/favorite', isLoggedIn(), async (req, res, next) => {
   const { tupperId } = req.body;
   const { _id } = req.session.currentUser;
   try {
@@ -44,20 +55,35 @@ router.put('/favorite', async (req, res, next) => {
   }
 });
 
-router.put('/undofavorite', async (req, res, next) => {
+router.put('/undofavorite', isLoggedIn(), async (req, res, next) => {
   const { tupperId } = req.body;
   const { _id } = req.session.currentUser;
   try {
     const userUndoFavorite = await User.findByIdAndUpdate(_id, { "$pull": {favorites: tupperId} }, {new: true})
     req.session.currentUser = userUndoFavorite;
     res.status(200);
-    res.json({ message: 'Tupper and users updated', data: { userUndoFavorite } });
+    res.json({ message: 'User updated', data: { userUndoFavorite } });
   } catch (error) {
     next(error);
   }
 });
 
-router.put('/follow', async (req, res, next) => {
+router.put('/deletefavorites', isLoggedIn(), async (req, res, next) => {
+  const { tupper, user } = req.body;
+  console.log(user)
+  console.log(tupper)
+  const id = user._id;
+  console.log(id)
+  try {
+    const userDeleteFavorite = await User.findByIdAndUpdate(id, { "$pull": {favorites: tupper}}, {new: true})
+    res.status(200);
+    res.json({ message: 'Users updated', data: userDeleteFavorite });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/follow', isLoggedIn(), async (req, res, next) => {
   const { otherUserId } = req.body;
   const { _id } = req.session.currentUser;
   try {
@@ -71,7 +97,7 @@ router.put('/follow', async (req, res, next) => {
   }
 });
 
-router.put('/unfollow', async (req, res, next) => {
+router.put('/unfollow', isLoggedIn(), async (req, res, next) => {
   const { otherUserId } = req.body;
   const { _id } = req.session.currentUser;
   try {

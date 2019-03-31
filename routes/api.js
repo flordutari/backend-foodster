@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-ObjectId = require('mongodb').ObjectID;
 
 const Tupper = require('../models/Tupper');
 const User = require('../models/User');
 
-router.get('/tuppers', async (req, res, next) => {
+const { isLoggedIn } = require('../helpers/middlewares');
+
+router.get('/tuppers', isLoggedIn(), async (req, res, next) => {
   try {
     const allTuppers = await Tupper.find();
     res.json(allTuppers);
@@ -14,7 +15,7 @@ router.get('/tuppers', async (req, res, next) => {
   }
 });
 
-router.get('/tuppers/:id', async (req, res, next) => {
+router.get('/tuppers/:id', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;
   try {
     const oneTupper = await Tupper.findById(id);
@@ -29,7 +30,7 @@ router.get('/tuppers/:id', async (req, res, next) => {
   }
 });
 
-router.get('/tuppers/categories', (req, res, next) => {
+router.get('/tuppers/categories', isLoggedIn(), (req, res, next) => {
   res.status(200).json({
     message: 'This is a private message'
   });
@@ -53,7 +54,7 @@ router.post('/tuppers', async (req, res, next) => {
   }
 });
 
-router.put('/tuppers/:id', async (req, res, next) => {
+router.put('/tuppers/:id', isLoggedIn(), async (req, res, next) => {
   const { name, category, imageUrl, price } = req.body;
   if (!name || !category || !imageUrl || !price) {
     res.status(400);
@@ -75,7 +76,7 @@ router.put('/tuppers/:id', async (req, res, next) => {
   }
 });
 
-router.put('/tuppers/:id/buy', async (req, res, next) => {
+router.put('/tuppers/:id/buy', isLoggedIn(), async (req, res, next) => {
   const { available, buyerId, buyerTickets, creatorTickets, creatorId  } = req.body;
   if (!req.body) {
     res.status(400);
@@ -95,7 +96,7 @@ router.put('/tuppers/:id/buy', async (req, res, next) => {
   }
 });
 
-router.delete('/tuppers/:id', async (req, res, next) => {
+router.delete('/tuppers/:id', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;
   try {
     const deletedTupper = await Tupper.findByIdAndDelete(id);
