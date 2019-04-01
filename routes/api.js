@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const Tupper = require('../models/Tupper');
 const User = require('../models/User');
@@ -85,6 +87,7 @@ router.put('/tuppers/:id/buy', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;
   const { _id } = req.session.currentUser;
   try {
+    await User.updateMany({ favorites :  ObjectId(id)}, { "$pull": {favorites: ObjectId(id)}})
     const boughtTupper = await Tupper.findByIdAndUpdate(id, { "$set": { available: !available, buyerId}}, {new: true});
     const buyerUser = await User.findByIdAndUpdate(_id, {tickets: buyerTickets, bought: id}, {new: true});
     const creatorUser = await User.findByIdAndUpdate(creatorId, {tickets: creatorTickets}, {new: true});
@@ -95,6 +98,7 @@ router.put('/tuppers/:id/buy', isLoggedIn(), async (req, res, next) => {
     next(error);
   }
 });
+
 
 router.delete('/tuppers/:id', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;

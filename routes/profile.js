@@ -68,21 +68,6 @@ router.put('/undofavorite', isLoggedIn(), async (req, res, next) => {
   }
 });
 
-router.put('/deletefavorites', isLoggedIn(), async (req, res, next) => {
-  const { tupper, user } = req.body;
-  console.log(user)
-  console.log(tupper)
-  const id = user._id;
-  console.log(id)
-  try {
-    const userDeleteFavorite = await User.findByIdAndUpdate(id, { "$pull": {favorites: tupper}}, {new: true})
-    res.status(200);
-    res.json({ message: 'Users updated', data: userDeleteFavorite });
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.put('/follow', isLoggedIn(), async (req, res, next) => {
   const { otherUserId } = req.body;
   const { _id } = req.session.currentUser;

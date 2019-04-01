@@ -23,6 +23,10 @@ const tupperSchema = new Schema({
     type: Boolean,
     default: true
   },
+  rated: {
+    type: Boolean,
+    default: false
+  },
   category: {
     type: [{
       type: String,
