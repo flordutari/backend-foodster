@@ -21,7 +21,8 @@ const userSchema = new Schema({
     default: '../img/default-profile.png'
   },
   status: {
-    type: Number
+    type: Number,
+    default: 0
   },
   tickets: {
     type: Number,
@@ -36,6 +37,14 @@ const userSchema = new Schema({
     ref: 'User'
   }],
   favorites: [{
+    type: ObjectId,
+    ref: 'Tupper'
+  }],
+  bought: [{
+    type: ObjectId,
+    ref: 'Tupper'
+  }],
+  rated: [{
     type: ObjectId,
     ref: 'Tupper'
   }],

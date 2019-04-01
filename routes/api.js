@@ -86,7 +86,7 @@ router.put('/tuppers/:id/buy', isLoggedIn(), async (req, res, next) => {
   const { _id } = req.session.currentUser;
   try {
     const boughtTupper = await Tupper.findByIdAndUpdate(id, { "$set": { available: !available, buyerId}}, {new: true});
-    const buyerUser = await User.findByIdAndUpdate(_id, {tickets: buyerTickets}, {new: true});
+    const buyerUser = await User.findByIdAndUpdate(_id, {tickets: buyerTickets, bought: id}, {new: true});
     const creatorUser = await User.findByIdAndUpdate(creatorId, {tickets: creatorTickets}, {new: true});
     req.session.currentUser = buyerUser;
     res.status(200);

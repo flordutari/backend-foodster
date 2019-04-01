@@ -111,4 +111,15 @@ router.put('/unfollow', isLoggedIn(), async (req, res, next) => {
   }
 });
 
+router.put('/rate', isLoggedIn(), async (req, res, next) => {
+  const { _id, status } = req.body;
+  try {
+    const userRated = await User.findByIdAndUpdate(_id, { "$set": {status} }, {new: true})
+    res.status(200);
+    res.json({ message: 'User updated', data: { userRated } });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
