@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../models/User');
+const Tupper = require('../models/Tupper')
 
 const { isLoggedIn } = require('../helpers/middlewares');
 
 router.get('/users', isLoggedIn(), async (req, res, next) => {
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find().populate('favorites');
     res.json(allUsers);
   } catch (error) {
     next(error);
@@ -97,11 +98,12 @@ router.put('/unfollow', isLoggedIn(), async (req, res, next) => {
 });
 
 router.put('/rate', isLoggedIn(), async (req, res, next) => {
-  const { _id, status } = req.body;
+  const { _id, status, tupperId, rated } = req.body;
   try {
     const userRated = await User.findByIdAndUpdate(_id, { "$set": {status} }, {new: true})
+    const tupperStatus = await Tupper.findByIdAndUpdate(tupperId, { "$set": { rated:!rated } }, {new: true})
     res.status(200);
-    res.json({ message: 'User updated', data: { userRated } });
+    res.json({ message: 'User updated', data: { userRated, tupperStatus } });
   } catch (error) {
     next(error);
   }
