@@ -31,10 +31,10 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
 });
 
 router.put('/edit', isLoggedIn(), async (req, res, next) => {
-  const { username, imageUrl, email } = req.body;
+  const { username, imageUrl, email, description } = req.body;
   const { _id } = req.session.currentUser;
   try {
-    const editedUser = await User.findByIdAndUpdate(_id, { "$set": {username, imageUrl, email }}, {new: true});
+    const editedUser = await User.findByIdAndUpdate(_id, { "$set": { username, imageUrl, email, description }}, {new: true});
     req.session.currentUser = editedUser;
     res.status(200);
     res.json(editedUser);

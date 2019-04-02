@@ -20,6 +20,10 @@ const userSchema = new Schema({
     type: String,
     default: '../img/default-profile.png'
   },
+  description: {
+    type: String,
+    default: "hi! I like to cook, but I have no time, I hope we can share some tuppers"
+  },
   status: {
     type: Number,
     default: 0
@@ -61,6 +65,8 @@ const userSchema = new Schema({
     updatedAt: 'updated_at'
   },
 });
+
+userSchema.index({ location: '2dsphere' });
 
 const User = mongoose.model('User', userSchema);
 
