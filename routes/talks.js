@@ -3,8 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
-// const User = require('../models/User');
 const Talk = require('../models/Talk');
+const Message = require('../models/Message');
 
 const { isLoggedIn } = require('../helpers/middlewares');
 
@@ -17,6 +17,17 @@ router.get('/mines', isLoggedIn(), async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/:id', isLoggedIn(), async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const oneTalk = await Talk.findById(id).populate('messages');
+    console.log(oneTalk)
+    res.json(oneTalk);
+  } catch (error) {
+    next(error);
+  }
+})
 
 router.post('/new', async (req, res, next) => {
   const { guestId } = req.body;
@@ -35,5 +46,24 @@ router.post('/new', async (req, res, next) => {
   }
 });
 
+router.post('/:id', (req, res, next) => {
+  const { message } = req.body;
+  console.log(message)
+  const { id } = req.params;
+  const { _id } = req.session.currentUser;
+    const newMessage = {
+      comment: message,
+      creator: _id,
+    };
+    Message.create(newMessage)
+    .then(message => {
+      return Talk.findByIdAndUpdate(id, { $push: { messages: message._id } }, {new: true} )
+    })
+    .then(talk => {
+      res.status(200);
+      res.json({ talk });
+    })
+    .catch(next)
+});
 
 module.exports = router;

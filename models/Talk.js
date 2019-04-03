@@ -13,17 +13,8 @@ const talkSchema = new Schema({
     ref: 'User'
   },
   messages: [{
-    comment: {
-      type: String
-    },
-    creator: {
-      type: ObjectId,
-      ref: 'User'
-    },
-    read: {
-      type: Boolean,
-      default: false
-    }
+    type: ObjectId,
+    ref: 'Message'
   }]
 });
 
