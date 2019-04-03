@@ -19,6 +19,10 @@ const talkSchema = new Schema({
     creator: {
       type: ObjectId,
       ref: 'User'
+    },
+    read: {
+      type: Boolean,
+      default: false
     }
   }]
 });
