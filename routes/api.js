@@ -42,7 +42,7 @@ router.post('/tuppers', async (req, res, next) => {
   const { name, imageUrl, category, price } = req.body;
   const { _id } = req.session.currentUser;
   const tupper = { name, imageUrl, category, price, creator:{_id} };
-  if (!tupper.name || !tupper.price || !tupper.category) {
+  if (!tupper) {
     res.status(400);
     res.json({ message: 'Make sure you include name, category and price' });
     return;

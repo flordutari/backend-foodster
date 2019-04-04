@@ -21,13 +21,25 @@ router.get('/mines', isLoggedIn(), async (req, res, next) => {
 router.get('/:id', isLoggedIn(), async (req, res, next) => {
   const { id } = req.params;
   try {
-    const oneTalk = await Talk.findById(id).populate('messages');
-    console.log(oneTalk)
+    const oneTalk = await Talk.findById(id).populate({
+      path: 'guest opener messages',
+      populate: {
+        path: 'creator',
+        model: 'User'
+      }
+    });
     res.json(oneTalk);
   } catch (error) {
     next(error);
   }
 })
+
+// const event = await Event.findById(eventId).populate({
+//   path: 'comments.creator escapeRoom players creator',
+//   populate: {
+//     path: 'user',
+//     model: 'User' }
+// });
 
 router.post('/new', async (req, res, next) => {
   const { guestId } = req.body;
@@ -48,7 +60,6 @@ router.post('/new', async (req, res, next) => {
 
 router.post('/:id', (req, res, next) => {
   const { message } = req.body;
-  console.log(message)
   const { id } = req.params;
   const { _id } = req.session.currentUser;
     const newMessage = {
