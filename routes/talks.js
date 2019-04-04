@@ -34,13 +34,6 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
   }
 })
 
-// const event = await Event.findById(eventId).populate({
-//   path: 'comments.creator escapeRoom players creator',
-//   populate: {
-//     path: 'user',
-//     model: 'User' }
-// });
-
 router.post('/new', async (req, res, next) => {
   const { guestId } = req.body;
   const { _id } = req.session.currentUser;
